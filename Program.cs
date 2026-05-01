@@ -1,12 +1,43 @@
+using NetCord;
+using NetCord.Gateway;
+using NetCord.Hosting.Gateway;
+using Serilog;
+using Serilog.Events;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
 builder.Services.AddOpenApi();
+builder.Services.AddControllers();
+builder.Services.AddDiscordGateway(options =>
+{
+   options.PublicKey = builder.Configuration["Discord:PublicKey"];
+   options.Token = builder.Configuration["Discord:Token"];
+   options.AutoStartStop = true;
+   options.Intents = GatewayIntents.Guilds | 
+   GatewayIntents.GuildMessages |
+   GatewayIntents.DirectMessages | 
+   GatewayIntents.MessageContent | 
+   GatewayIntents.DirectMessageReactions | 
+   GatewayIntents.GuildMessageReactions;
+   options.Presence = new PresenceProperties(UserStatusType.Online).WithActivities([
+       new UserActivityProperties("Coding with NetCord", UserActivityType.Competing)
+   ]);
+});
+builder.Services.AddGatewayHandlers(typeof(Program).Assembly);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseSerilogRequestLogging();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -14,28 +45,4 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+await app.RunAsync();
