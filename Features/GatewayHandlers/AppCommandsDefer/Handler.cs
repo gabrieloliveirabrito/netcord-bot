@@ -8,6 +8,11 @@ public class AppCommandsDefer : IInteractionCreateGatewayHandler
 {
     public async ValueTask HandleAsync(Interaction interaction)
     {
-        await interaction.SendResponseAsync(InteractionCallback.DeferredMessage(MessageFlags.Loading));
+        if (interaction is ApplicationCommandInteraction)
+        {
+            await interaction.SendResponseAsync(
+                InteractionCallback.DeferredMessage(MessageFlags.Loading)
+            );
+        }
     }
 }
