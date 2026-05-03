@@ -1,4 +1,4 @@
-namespace NetCordBot.Handlers;
+namespace NetCordBot.Handlers.GatewayHandlers;
 
 using NetCord;
 using NetCord.Gateway;
