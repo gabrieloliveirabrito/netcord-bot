@@ -4,7 +4,7 @@ using NetCord;
 using NetCord.Gateway;
 using NetCord.Hosting.Gateway;
 
-public class CommandReactionHandler(ILogger<MessageCreateHandler> logger) : IMessageCreateGatewayHandler
+public class CommandReactionHandler : IMessageCreateGatewayHandler
 {
     public async ValueTask HandleAsync(Message message)
     {
