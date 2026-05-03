@@ -4,8 +4,11 @@ using NetCord.Hosting.Gateway;
 using NetCord.Hosting.Services;
 using NetCord.Hosting.Services.ApplicationCommands;
 using NetCord.Hosting.Services.Commands;
+using NetCord.Hosting.Services.ComponentInteractions;
 using NetCord.Rest;
+using NetCord.Services.ComponentInteractions;
 using NetCordBot.Features.Logging;
+using NetCordBot.Features.Math;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -64,6 +67,15 @@ builder.Services.AddCommands(options =>
 {
     options.Prefix = "!";
 });
+
+builder.Services
+    .AddComponentInteractions<ButtonInteraction, ButtonInteractionContext>()
+    .AddComponentInteractions<StringMenuInteraction, StringMenuInteractionContext>()
+    .AddComponentInteractions<UserMenuInteraction, UserMenuInteractionContext>()
+    .AddComponentInteractions<RoleMenuInteraction, RoleMenuInteractionContext>()
+    .AddComponentInteractions<MentionableMenuInteraction, MentionableMenuInteractionContext>()
+    .AddComponentInteractions<ChannelMenuInteraction, ChannelMenuInteractionContext>()
+    .AddComponentInteractions<ModalInteraction, ModalInteractionContext>();
 
 builder.Services.AddGatewayHandlers(typeof(Program).Assembly);
 
