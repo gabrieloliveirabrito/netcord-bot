@@ -13,8 +13,6 @@ public class MakeHolderCommand(IHttpClientFactory httpClientFactory) : Applicati
         [SlashCommandParameter(Name = "height", Description = "The height of holder")] int? height = null
     )
     {
-        await Context.Interaction.SendResponseAsync(InteractionCallback.DeferredMessage(MessageFlags.Loading));
-
         var reply = new InteractionMessageProperties();
         var author = Context.Interaction.User;
         var displayName = author.GlobalName ?? author.Username;
