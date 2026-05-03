@@ -4,6 +4,8 @@ using NetCord.Hosting.Gateway;
 using NetCord.Hosting.Services;
 using NetCord.Hosting.Services.ApplicationCommands;
 using NetCord.Hosting.Services.Commands;
+using NetCord.Rest;
+using NetCordBot.Features.Logging;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +44,11 @@ builder.Services.AddDiscordGateway(options =>
     GatewayIntents.MessageContent |
     GatewayIntents.DirectMessageReactions |
     GatewayIntents.GuildMessageReactions;
+
+    options.RestClientConfiguration = new RestClientConfiguration
+    {
+        Logger = new BotLogger(builder.Environment.IsDevelopment())
+    };
 
     options.Presence = new PresenceProperties(UserStatusType.Online).WithActivities([
         new UserActivityProperties("Coding with NetCord", UserActivityType.Competing)
