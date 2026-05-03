@@ -3,7 +3,7 @@ namespace NetCordBot.Handlers;
 using NetCord.Gateway;
 using NetCord.Hosting.Gateway;
 
-public class MessageCreateHandler(ILogger<MessageCreateHandler> logger) : IMessageCreateGatewayHandler
+public class MessageLogHandler(ILogger<MessageLogHandler> logger) : IMessageCreateGatewayHandler
 {
     public ValueTask HandleAsync(Message message)
     {
