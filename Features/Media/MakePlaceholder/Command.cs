@@ -5,7 +5,7 @@ using NetCord.Services.ApplicationCommands;
 
 namespace NetCordBot.Features.MakeHolder;
 
-public class MakeHolderCommand(IHttpClientFactory httpClientFactory) : ApplicationCommandModule<ApplicationCommandContext>
+public class MakePlaceholderCommand(IHttpClientFactory httpClientFactory) : ApplicationCommandModule<ApplicationCommandContext>
 {
     [SlashCommand("holder", "Create a holder image")]
     public async Task Make(
