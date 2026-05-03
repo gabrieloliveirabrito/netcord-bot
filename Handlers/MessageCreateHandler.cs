@@ -7,7 +7,10 @@ public class MessageCreateHandler(ILogger<MessageCreateHandler> logger) : IMessa
 {
     public ValueTask HandleAsync(Message message)
     {
-        logger.LogInformation($"User {message.Author.GlobalName ?? message.Author.Username} says: {message.Content}");
+        if (!message.Author.IsBot && !string.IsNullOrEmpty(message.Content))
+        {
+            logger.LogInformation($"User {message.Author.GlobalName ?? message.Author.Username} says: {message.Content}");
+        }
 
         return ValueTask.CompletedTask;
     }
